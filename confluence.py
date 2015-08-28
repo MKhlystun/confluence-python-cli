@@ -143,9 +143,10 @@ class ConfluencePage(object):
         return {"url": self.page_url, "id": self.page_id}
 
     def update(self,content,parent_id=0):
-        self.remove()
-        self.parent_id = parent_id
-        self.add(str(parent_id),content)
+        page = self.server.confluence2.getPage(self.token, self.spaceKey, self.name)
+        page["content"] = content
+        pageupdateoptions={"versionComment":"Update page","minorEdit":True}
+        self.server.confluence2.updatePage(self.token,page,pageupdateoptions)
 
     def get(self):
         self.wanted_page = self.server.confluence2.getPage(self.token, self.spaceKey, self.name)
